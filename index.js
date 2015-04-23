@@ -5,6 +5,7 @@ var checker = require('ember-cli-version-checker');
 var path = require('path');
 var mergeTrees = require('broccoli-merge-trees');
 var pickFiles = require('broccoli-static-compiler');
+var Funnel = require('broccoli-funnel');
 
 module.exports = {
   name: 'liquid-fire',
@@ -15,11 +16,11 @@ module.exports = {
 
   treeForVendor: function(tree){
     var velocityPath = path.dirname(require.resolve('velocity-animate'));
-    var velocityTree = pickFiles(this.treeGenerator(velocityPath), {
+    var velocityTree = new Funnel(this.treeGenerator(velocityPath), {
       srcDir: '/',
       destDir: 'velocity'
     });
-    return mergeTrees([tree, velocityTree]);
+    return tree(velocityTree);
   },
 
   included: function(app){
